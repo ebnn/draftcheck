@@ -8,8 +8,11 @@ BAD_PHRASES = [
     'is a (:?man|woman) who', 'along (:?the same|these|this|the) (:?lines|line)', 
     'One of the most', 'absolutely essential', 'a large number of',
     'all intents and purposes', 'not important', 'the question as to whether',
-    'there is no doubt but that', 'this is a (?:subject|topic) which',
-    'the fact that', 
+    'there is no doubt but that', 'this is a (:?subject|topic) which',
+    'the fact that', 'the authors', 'the author', 'revert back', 'repeat the same',
+    'reason to believe', 'join together', 'is used to', 'in regards to',
+    'importantly', 'as long as', 'along (:?those|these) lines', '(?:a|the) tendency to',
+    '(?:a|the) need for', '(?:a|the) majority of'
 ]
 
 WEASEL_WORDS = [
@@ -131,7 +134,7 @@ def check_cite_after_period(text, matches):
     """Citations should appear before periods, not after."""
     return [m.span() for m in matches]
 
-@style_rule(r'(:?in|as|on)\s\\cite{')
+@style_rule(r'(:?in|as|on|by)\s\\cite{')
 def check_cite_used_as_noun(text, matches):
     """Citations should not be used as nouns."""
     return [m.span() for m in matches]
@@ -174,6 +177,11 @@ def check_passive_tense(text, matches):
 @type_rule('\s-\s')
 def check_space_surrounded_dash(text, matches):
     """A dash surrounded by a space should be an em-dash: '---'."""
+    return [m.span() for m in matches]
+
+@style_rule(r'\bnot\sun')
+def check_double_negative(text, matches):
+    """Avoid double negatives."""
     return [m.span() for m in matches]
 
 def validate(text):
