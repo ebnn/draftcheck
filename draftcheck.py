@@ -189,7 +189,7 @@ def check_space_surrounded_dash(text, matches):
     """A dash surrounded by a space should be an em-dash: '---'."""
     return [m.span() for m in matches]
 
-@style_rule(r'\bnot\sun')
+@style_rule(r'\bnot\s(un|in)[a-z]+(ed|ble|ing|ent|thy)\b')
 def check_double_negative(text, matches):
     """Avoid double negatives."""
     return [m.span() for m in matches]
