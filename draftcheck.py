@@ -184,6 +184,11 @@ def check_double_negative(text, matches):
     """Avoid double negatives."""
     return [m.span() for m in matches]
 
+@style_rule(r'\b([a-z]+)\s([a-z]+)\b')
+def check_duplicate_word(text, matches):
+    """Remove duplicated word."""
+    return [m.span() for m in matches if m.group(1) == m.group(2)]
+
 def validate(text):
     for r in RULES_LIST:
         for match in r(text):
