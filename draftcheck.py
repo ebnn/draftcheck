@@ -123,14 +123,14 @@ def pad_string(text, span, size):
 
     text_format = '{0}{1}{2}'
 
-    if len(left_str) != size:
+    if len(left_str) == size:
         text_format = '...' + text_format
 
-    if len(right_str) != size:
+    if len(right_str) == size:
         text_format = text_format + '...'
 
     padded_str = text_format.format(left_str, text[span[0]:span[1]], right_str)
-    start_index = len(left_str) + (3 if len(left_str) != size else 0)
+    start_index = len(left_str) + (3 if len(left_str) == size else 0)
 
     return padded_str, start_index
 
