@@ -25,3 +25,11 @@ def test_cite_used_as_noun():
             r'This is shown in \cite{smith08}'))
     assert_false(found_error(draftcheck.check_cite_used_as_noun,
             r'It is shown to be this way \cite{smith08}.'))
+
+def test_no_space_before_cite():
+    assert_true(found_error(draftcheck.check_no_space_before_cite,
+            r'Napoleonic war\cite{smith08}.'))
+    assert_true(found_error(draftcheck.check_no_space_before_cite,
+            r'Napoleonic war \cite{smith08}.'))
+    assert_false(found_error(draftcheck.check_no_space_before_cite,
+            r'Napoleonic war~\cite{smith08}.'))
