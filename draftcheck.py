@@ -194,26 +194,25 @@ def validate(text):
         for match in r(text):
             yield r, match
 
-def main(argv):
-    text = r'lol lol \footnote{}, as in\cite{foo}, the cake was made in 100 degrees celsius.'
-
+def main(path):
     num_errors = 0
-    for lineno, line in enumerate(text.split(r'\n')):
-        for r, match in validate(line):
-            prefix = '{0}:{1}:{2}:'.format('file', lineno, match[0])
-            print prefix,
+    with open(path, 'r') as infile:
+        for lineno, line in enumerate(infile):
+            for r, match in validate(line):
+                prefix = '{0}:{1}:{2}:'.format('file', lineno, match[0])
+                print prefix,
 
-            padded_str, start_index = pad_string(text, match, 10)
-            if r.show_spaces:
-                print padded_str.replace(' ', '_')
-            else:
-                print padded_str
+                padded_str, start_index = pad_string(line, match, 10)
+                if r.show_spaces:
+                    print padded_str.replace(' ', '_')
+                else:
+                    print padded_str
 
-            print ' ' * (len(prefix) + start_index + 1) + '^' * (match[1] - match[0])
-            print "\t[R{0:03d}]".format(r.__id), r.__doc__
-            print
+                print ' ' * (len(prefix) + start_index + 1) + '^' * (match[1] - match[0])
+                print "\t[R{0:03d}]".format(r.__id), r.__doc__
+                print
 
-            num_errors += 1
+                num_errors += 1
 
     print
     print 'Total of {0} warnings found.'.format(num_errors)
@@ -221,4 +220,4 @@ def main(argv):
 if __name__ == '__main__':
     import sys
 
-    main(sys.argv)
+    main(sys.argv[1])
