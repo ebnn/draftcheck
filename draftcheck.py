@@ -9,8 +9,8 @@ BAD_PHRASES = [
     'One of the most', 'absolutely essential', 'a large number of',
     'all intents and purposes', 'not important', 'the question as to whether',
     'there is no doubt but that', 'this is a (subject|topic) which',
-    'the fact that', 'the authors', 'the author', 'revert back', 'repeat the same',
-    'reason to believe', 'join together', 'is used to', 'in regards to',
+    'the fact that', 'the authors', 'the author', 'more and more', 'over and over',
+    'reason to believe', 'is used to', 'in regards to', 'while at the same time',
     'importantly', 'as long as', 'along (those|these) lines', '(a|the) tendency to',
     '(a|the) need for', '(a|the) majority of'
 ]
@@ -49,6 +49,12 @@ IRREGULAR_VERBS = [
     'thrived', 'thrown', 'thrust', 'trodden', 'understood', 'upheld',
     'upset', 'woken', 'worn', 'woven', 'wed', 'wept', 'wound', 'won',
     'withheld', 'withstood', 'wrung', 'written'
+]
+
+REDUNDANT_PHRASES = [
+    'end result', 'final outcome', 'already exists', 'and also', 'at about',
+    'clearly evident', '(join|group) together', 'revert back', 'repeat the same',
+    'the reason is because'
 ]
 
 LATEX_ENVS = {
@@ -171,7 +177,7 @@ def check_incorrect_usage_of_x_as_times(text, matches):
 
 @style_rule(join_patterns(BAD_PHRASES))
 def check_bad_phrases(text, matches):
-    """Redundant, unnecessary, overused or needlessly wordy. Consider rephrasing."""
+    """Unnecessary, overused or needlessly wordy. Consider rephrasing."""
     return [m.span() for m in matches]
 
 @style_rule(join_patterns(WEASEL_WORDS))
@@ -207,6 +213,11 @@ def check_negatives(text, matches):
 @style_rule(r'\.\s(And|But)\b')
 def check_begin_with_add_or_but(text, matches):
     """Sentences should not begin with 'And' or 'But'."""
+    return [m.span() for m in matches]
+
+@style_rule(join_patterns(REDUNDANT_PHRASES))
+def check_redundant_expressions(text, matches):
+    """Redundant expressions should be rephrased."""
     return [m.span() for m in matches]
 
 def validate(text, env='paragraph'):
