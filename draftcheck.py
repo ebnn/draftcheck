@@ -51,6 +51,13 @@ IRREGULAR_VERBS = [
     'withheld', 'withstood', 'wrung', 'written'
 ]
 
+LATEX_ENVS = {
+    'math': ['math', 'array', 'eqnarray', 'equation', 'align'],
+    'paragraph': ['abstract', 'document', 'titlepage']
+}
+
+LATEX_ENVS = dict((k, env) for env in LATEX_ENVS for k in LATEX_ENVS[env])
+
 class RuleCategory:
     """General rules that do not fit in any other category."""
     General = 0
@@ -61,7 +68,7 @@ class RuleCategory:
     """Rules regarding compositional style and usage."""
     Style = 2
 
-def rule(pattern=None, category=RuleCategory.General, show_spaces=False):
+def rule(pattern=None, category=RuleCategory.General, show_spaces=False, in_env='paragraph'):
     """Decorator used to create rules.
 
     Parameters
@@ -81,9 +88,13 @@ def rule(pattern=None, category=RuleCategory.General, show_spaces=False):
         false.
     """
     regexpr = re.compile(pattern)
+
     def inner_rule(func):
-        def wrapper(text):
-            return func(text, regexpr.finditer(text))
+        def wrapper(text, env):
+            if env == in_env:
+                return func(text, regexpr.finditer(text))
+            else:
+                return []
 
         wrapper.__id = len(RULES_LIST) + 1
         wrapper.show_spaces = show_spaces
@@ -92,7 +103,6 @@ def rule(pattern=None, category=RuleCategory.General, show_spaces=False):
 
         return wrapper
     return inner_rule
-
 
 type_rule = functools.partial(rule, category=RuleCategory.Style)
 style_rule = functools.partial(rule, category=RuleCategory.Style)
@@ -189,16 +199,29 @@ def check_duplicate_word(text, matches):
     """Remove duplicated word."""
     return [m.span() for m in matches if m.group(1) == m.group(2)]
 
-def validate(text):
+def validate(text, env='paragraph'):
     for r in RULES_LIST:
-        for match in r(text):
+        for match in r(text, env):
             yield r, match
 
 def main(path):
     num_errors = 0
+    envs = ['']
+    env_begin_regex = re.compile(r'\\begin{(\w+)}')
+    env_end_regex = re.compile(r'\\end{(\w+)}')
+
     with open(path, 'r') as infile:
         for lineno, line in enumerate(infile):
-            for r, match in validate(line):
+            # Check if the environment has changed
+            match = env_begin_regex.match(line)
+            if match:
+                envs.append(LATEX_ENVS.get(match.group(1), 'unknown'))
+
+            match = env_end_regex.match(line)
+            if match:
+                envs.pop()
+
+            for r, match in validate(line, envs[-1]):
                 prefix = '{0}:{1}:{2}:'.format('file', lineno, match[0])
                 print prefix,
 
