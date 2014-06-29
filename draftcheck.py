@@ -216,6 +216,11 @@ def check_begin_with_add_or_but(text, matches):
     """Sentences should not begin with 'And' or 'But'."""
     return [m.span() for m in matches]
 
+@style_rule(r'\. There (is|are)\b', pedantic=True)
+def check_begin_with_there_is(text, matches):
+    """Sentences should not begin with 'There is' or 'There are'."""
+    return [m.span() for m in matches]
+
 @style_rule(r'\bmore\s\w+er\b')
 def check_double_comparative(text, matches):
     """Comparative adjectives should not be preceded by 'more'."""
