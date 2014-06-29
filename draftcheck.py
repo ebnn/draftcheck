@@ -199,6 +199,11 @@ def check_duplicate_word(text, matches):
     """Remove duplicated word."""
     return [m.span() for m in matches if m.group(1) == m.group(2)]
 
+@style_rule(r'\b((does|did)\snot|doesn\'t|didn\'t)\s(\w+)')
+def check_negatives(text, matches):
+    """Negatives should be rephrases as affirmatives."""
+    return [m.span() for m in matches]
+
 def validate(text, env='paragraph'):
     for r in RULES_LIST:
         for match in r(text, env):
