@@ -5,20 +5,20 @@ RULES_LIST = []
 
 BAD_PHRASES = [
     'as to whether', 'the case that', 'in many cases', 'certainly',
-    'is a (:?man|woman) who', 'along (:?the same|these|this|the) (:?lines|line)', 
+    'is a (man|woman) who', 'along (the same|these|this|the) (lines|line)', 
     'One of the most', 'absolutely essential', 'a large number of',
     'all intents and purposes', 'not important', 'the question as to whether',
-    'there is no doubt but that', 'this is a (:?subject|topic) which',
+    'there is no doubt but that', 'this is a (subject|topic) which',
     'the fact that', 'the authors', 'the author', 'revert back', 'repeat the same',
     'reason to believe', 'join together', 'is used to', 'in regards to',
-    'importantly', 'as long as', 'along (:?those|these) lines', '(?:a|the) tendency to',
-    '(?:a|the) need for', '(?:a|the) majority of'
+    'importantly', 'as long as', 'along (those|these) lines', '(a|the) tendency to',
+    '(a|the) need for', '(a|the) majority of'
 ]
 
 WEASEL_WORDS = [
     'many','various','very','fairly','several','extremely',
     'exceedingly','quite','remarkably','few','surprisingly',
-    'mostly','largely','huge','tiny','(?:are|is) a number',
+    'mostly','largely','huge','tiny','(are|is) a number',
     'excellent','interestingly','significantly',
     'substantially','clearly','vast','relatively','completely'
 ]
@@ -105,7 +105,7 @@ def join_patterns(patterns):
     patterns : a list or iterable of strings
         Contains the patterns to be joined together into one regular expression.
     """
-    return '|'.join(map(lambda x: '(?:' + x + ')', patterns))
+    return r'\b(' + '|'.join(map(lambda x: '(?:' + x + ')', patterns)) + ')'
 
 def pad_string(text, span, size):
     left_str = text[max(0, span[0] - size):span[0]]
