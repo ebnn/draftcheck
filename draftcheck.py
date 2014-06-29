@@ -204,6 +204,11 @@ def check_negatives(text, matches):
     """Negatives should be rephrases as affirmatives."""
     return [m.span() for m in matches]
 
+@style_rule(r'\.\s(And|But)\b')
+def check_begin_with_add_or_but(text, matches):
+    """Sentences should not begin with 'And' or 'But'."""
+    return [m.span() for m in matches]
+
 def validate(text, env='paragraph'):
     for r in RULES_LIST:
         for match in r(text, env):
