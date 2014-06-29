@@ -215,6 +215,11 @@ def check_begin_with_add_or_but(text, matches):
     """Sentences should not begin with 'And' or 'But'."""
     return [m.span() for m in matches]
 
+@style_rule(r'\bmore\s\w+er\b')
+def check_double_comparative(text, matches):
+    """Comparative adjectives should not be preceded by 'more'."""
+    return [m.span() for m in matches]
+
 @style_rule(join_patterns(REDUNDANT_PHRASES))
 def check_redundant_expressions(text, matches):
     """Redundant expressions should be rephrased."""
