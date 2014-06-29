@@ -74,7 +74,8 @@ class RuleCategory:
     """Rules regarding compositional style and usage."""
     Style = 2
 
-def rule(pattern=None, category=RuleCategory.General, show_spaces=False, in_env='paragraph'):
+def rule(pattern=None, category=RuleCategory.General, show_spaces=False, \
+         in_env='paragraph', pedantic=False):
     """Decorator used to create rules.
 
     Parameters
@@ -96,11 +97,11 @@ def rule(pattern=None, category=RuleCategory.General, show_spaces=False, in_env=
     regexpr = re.compile(pattern)
 
     def inner_rule(func):
-        def wrapper(text, env):
+        def wrapper(text, env, flags):
             if env == in_env:
-                return func(text, regexpr.finditer(text))
-            else:
-                return []
+                if not pedantic or flags['pedantic'] is True:
+                    return func(text, regexpr.finditer(text))
+            return []
 
         wrapper.__id = len(RULES_LIST) + 1
         wrapper.show_spaces = show_spaces
@@ -185,9 +186,9 @@ def check_weasel_words(text, matches):
     """Weasel words should be avoided."""
     return [m.span() for m in matches]
 
-@style_rule(r'\b(am|are|were|being|is|been|was|be)\s(\w+ed|{0})'.format(join_patterns(IRREGULAR_VERBS)))
-def check_passive_tense(text, matches):
-    """Passive tense should be avoided."""
+@style_rule(r'\b(am|are|were|being|is|been|was|be)\s(\w+ed|{0})'.format(join_patterns(IRREGULAR_VERBS)), pedantic=True)
+def check_passive_voice(text, matches):
+    """Passive voice should be avoided."""
     return [m.span() for m in matches]
 
 @type_rule('\s-\s')
@@ -225,12 +226,15 @@ def check_redundant_expressions(text, matches):
     """Redundant expressions should be rephrased."""
     return [m.span() for m in matches]
 
-def validate(text, env='paragraph'):
+def validate(text, env='paragraph', flags=None):
+    if flags is None:
+        flags = dict()
+
     for r in RULES_LIST:
-        for match in r(text, env):
+        for match in r(text, env, flags):
             yield r, match
 
-def main(path):
+def main(path, flags):
     num_errors = 0
     envs = ['paragraph']
     env_begin_regex = re.compile(r'\\begin{(\w+)}')
@@ -247,7 +251,7 @@ def main(path):
             if match:
                 envs.pop()
 
-            for r, match in validate(line, envs[-1]):
+            for r, match in validate(line, envs[-1], flags):
                 prefix = '{0}:{1}:{2}:'.format('file', lineno, match[0])
                 print prefix,
 
@@ -269,4 +273,4 @@ def main(path):
 if __name__ == '__main__':
     import sys
 
-    main(sys.argv[1])
+    main(sys.argv[1], { 'pedantic': False })
