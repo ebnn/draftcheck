@@ -206,7 +206,7 @@ def validate(text, env='paragraph'):
 
 def main(path):
     num_errors = 0
-    envs = ['']
+    envs = ['paragraph']
     env_begin_regex = re.compile(r'\\begin{(\w+)}')
     env_end_regex = re.compile(r'\\end{(\w+)}')
 
