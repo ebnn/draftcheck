@@ -145,7 +145,7 @@ def check_cite_after_period(text, matches):
     """
     return [m.span() for m in matches]
 
-@style_rule(r'(:?in|as|on|by)\s\\cite{')
+@style_rule(r'(:?in|as|on|by)[ ~]\\cite{')
 def check_cite_used_as_noun(text, matches):
     """Citations should not be used as nouns.
     
