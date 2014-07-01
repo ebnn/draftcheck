@@ -211,10 +211,10 @@ def check_double_negative(text, matches):
     """Avoid double negatives."""
     return [m.span() for m in matches]
 
-@style_rule(r'\b([a-z]+)\s([a-z]+)\b(?![^{]*})')
+@style_rule(r'\b(\w+)\s+\1\b(?![^{]*})')
 def check_duplicate_word(text, matches):
     """Remove duplicated word."""
-    return [m.span() for m in matches if m.group(1) == m.group(2)]
+    return [m.span() for m in matches]
 
 @style_rule(r'\b((does|did)\snot|doesn\'t|didn\'t)\s(\w+)')
 def check_negatives(text, matches):
