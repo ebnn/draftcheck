@@ -91,7 +91,7 @@ def rule(pattern=None, category=RuleCategory.General, show_spaces=False, \
     regexpr = re.compile(pattern)
 
     def inner_rule(func):
-        def wrapper(text, env, flags):
+        def wrapper(text, env):
             if env == in_env:
                 return func(text, regexpr.finditer(text))
             return []
@@ -197,10 +197,14 @@ def check_redundant_expressions(text, matches):
     """Redundant expressions should be rephrased."""
     return [m.span() for m in matches]
 
-def validate(text, env='paragraph', flags=None):
-    if flags is None:
-        flags = dict()
 
+def validate(text, env='paragraph'):
     for r in RULES_LIST:
-        for match in r(text, env, flags):
+        for match in r(text, env):
             yield r, match
+
+def get_brief(rule):
+    return rule.__doc__.split('\n\n')[0]
+
+def get_detail(rule):
+    return rule.__doc__.split('\n\n')[1:]
