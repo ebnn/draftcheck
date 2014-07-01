@@ -58,10 +58,6 @@ REDUNDANT_PHRASES = [
     'the reason is because'
 ]
 
-CONTRACTIONS = [
-    'n\'t', '\'ll', '\'ve', '\'d'
-]
-
 class RuleCategory:
     """General rules that do not fit in any other category."""
     General = 0
@@ -245,7 +241,7 @@ def check_redundant_expressions(text, matches):
     """Redundant expressions should be rephrased."""
     return [m.span() for m in matches]
 
-@style_rule('\w+' + join_patterns(CONTRACTIONS))
+@style_rule(r"\b[a-z]+(n't|'ll|'ve|'d)\b")
 def check_contractions(text, matches):
     """Contractions should be written out in full"""
     return [m.span() for m in matches]
