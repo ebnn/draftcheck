@@ -8,28 +8,22 @@ def found_error(rule, text):
             return True
     return False
 
-def test_space_before_footnote():
-    assert_true(found_error(rules.check_space_before_footnote,
-            r'Bake the cake at 150 degrees \footnote{Degrees celsius}'))
-    assert_false(found_error(rules.check_space_before_footnote,
-            r'Bake the cake at 150 degrees\footnote{Degrees celsius}'))
+def normalise_text(text):
+    return ' '.join(map(lambda x: x.lstrip(), text.split('\n')))
 
-def test_cite_after_period():
-    assert_true(found_error(rules.check_cite_after_period,
-            r'Napoleonic war.\cite{smith08}'))
-    assert_false(found_error(rules.check_cite_after_period,
-            r'Napoleonic war\cite{smith08}.'))
+def test_examples():
+    import re
 
-def test_cite_used_as_noun():
-    assert_true(found_error(rules.check_cite_used_as_noun,
-            r'This is shown in \cite{smith08}'))
-    assert_false(found_error(rules.check_cite_used_as_noun,
-            r'It is shown to be this way \cite{smith08}.'))
+    example_regex = re.compile(r'(Good|Bad):\n(.+?)\n\n', flags=re.S)
+    for r in rules.RULES_LIST:
+        for match in example_regex.finditer(r.__doc__):
+            expected = False if match.group(1) == 'Good' else True
+            text = normalise_text(match.group(2))
 
-def test_no_space_before_cite():
-    assert_true(found_error(rules.check_no_space_before_cite,
-            r'Napoleonic war\cite{smith08}.'))
-    assert_true(found_error(rules.check_no_space_before_cite,
-            r'Napoleonic war \cite{smith08}.'))
-    assert_false(found_error(rules.check_no_space_before_cite,
-            r'Napoleonic war~\cite{smith08}.'))
+            yield check_example, r, text, expected
+
+def check_example(r, text, expected):
+    if expected is True:
+        assert_true(found_error(r, text), msg=text)
+    else:
+        assert_false(found_error(r, text), msg=text)
