@@ -173,7 +173,16 @@ def check_no_space_before_cite(text, matches):
 
 @type_rule(r'\d+%')
 def check_unescaped_percentage(text, matches):
-    """Percentage signs should be escaped."""
+    """Percentage signs should be escaped.
+    
+    Examples
+    --------
+    Bad:
+        The company's stocks rose by 15%.
+
+    Good:
+        The company's stocks rose by 15\\%.
+    """
     return [m.span() for m in matches]
 
 @type_rule(r'\s[,;.!?]', show_spaces=True)
@@ -213,37 +222,104 @@ def check_double_negative(text, matches):
 
 @style_rule(r'\b(\w+)\s+\1\b(?![^{]*})')
 def check_duplicate_word(text, matches):
-    """Remove duplicated word."""
+    """Remove duplicated word.
+
+    Example
+    -------
+    Bad:
+        The famous two masks associated with drama are symbols of the
+        the ancient Muses, Thalia (comedy) and Melpomene (tragedy).
+
+    Good:
+        The famous two masks associated with drama are symbols of the
+        ancient Muses, Thalia (comedy) and Melpomene (tragedy).
+    """
     return [m.span() for m in matches]
 
-@style_rule(r'\b((does|did)\snot|doesn\'t|didn\'t)\s(\w+)')
+@style_rule(r'\b(does|did|would) (not|doesn\'t|didn\'t) (\w+)')
 def check_negatives(text, matches):
-    """Negatives should be rephrases as affirmatives."""
+    """Negatives should be rephrases as affirmatives.
+    
+    Example
+    -------
+    Bad:
+        .. would not have been possible without the work of ....
+
+    Good:
+        ... pioneered the work on ...
+    """
     return [m.span() for m in matches]
 
-@style_rule(r'\.\s(And|But)\b')
+@style_rule(r'\b(And|But)\b')
 def check_begin_with_add_or_but(text, matches):
-    """Sentences should not begin with 'And' or 'But'."""
+    """Sentences should not begin with 'And' or 'But'.
+    
+    Example
+    -------
+    Bad:
+        But the new algorithm only offers a 15\\% compression rate on noisy data.
+
+    Good:
+        However, the new algorithm only offers a 15\\% compression rate on noisy
+        data.
+    """
     return [m.span() for m in matches]
 
-@style_rule(r'\. There (is|are)\b')
+@style_rule(r'\bThere (is|are)\b')
 def check_begin_with_there_is(text, matches):
-    """Sentences should not begin with 'There is' or 'There are'."""
+    """Sentences should not begin with 'There is' or 'There are'.
+
+    Example
+    -------
+    Bad:
+        There are times when masses of salmon have to swim upstream to spawn.
+
+    Good:
+        Masses of salmon swim upstream to spawn during the last stage of their
+        life cycle.
+    """
     return [m.span() for m in matches]
 
 @style_rule(r'\bmore\s\w+er\b')
 def check_double_comparative(text, matches):
-    """Comparative adjectives should not be preceded by 'more'."""
+    """Comparative adjectives should not be preceded by 'more'.
+    
+    Examples
+    --------
+    Bad:
+        Our proposed method is more faster than existing algorithms.
+
+    Good:
+        Our proposed method is faster than existing algorithms.
+    """
     return [m.span() for m in matches]
 
 @style_rule(join_patterns(REDUNDANT_PHRASES))
 def check_redundant_expressions(text, matches):
-    """Redundant expressions should be rephrased."""
+    """Redundant expressions should be rephrased.
+    
+    Examples
+    --------
+    Bad:
+        The end result of the study is successful.
+
+    Good:
+        The result of the study is succesful.
+    """
     return [m.span() for m in matches]
 
 @style_rule(r"\b[a-z]+(n't|'ll|'ve|'d)\b")
 def check_contractions(text, matches):
-    """Contractions should be written out in full"""
+    """Contractions should be written out in full.
+    
+    Examples
+    --------
+    Bad:
+        The methods used in the study isn't very clear.
+
+    Good:
+        The methods used in the study is not very clear.
+    """
     return [m.span() for m in matches]
 
 def validate(text, env='paragraph'):
