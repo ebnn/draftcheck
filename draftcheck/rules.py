@@ -113,22 +113,66 @@ style_rule = functools.partial(rule, category=RuleCategory.Style)
 
 @type_rule(r'\s+\\footnote{', show_spaces=True)
 def check_space_before_footnote(text, matches):
-    """There should not be any spaces before footnotes."""
+    """There should not be any spaces before footnotes.
+    
+    Remove the extraneous spaces before the \\footnote command.
+    
+    Examples
+    --------
+    Bad:
+        Napolean's armies were defeated in Waterloo \\footnote{In present day
+        Belgium}.
+
+    Good:
+        Napolean's armies were defeated in Waterloo\\footnote{In present day
+        Belgium}.
+    """
     return [m.span() for m in matches]
 
 @type_rule(r'\.\\cite{')
 def check_cite_after_period(text, matches):
-    """Citations should appear before periods, not after."""
+    """Citations should appear before periods, not after.
+    
+    Move the \\cite command inside the sentence, before the period.
+
+    Examples
+    --------
+    Bad:
+        Johannes Brahms was born in Hamburg.\\cite{}
+
+    Good:
+        Johannes Brahms was born in Hamburg~\\cite{}.
+    """
     return [m.span() for m in matches]
 
 @style_rule(r'(:?in|as|on|by)\s\\cite{')
 def check_cite_used_as_noun(text, matches):
-    """Citations should not be used as nouns."""
+    """Citations should not be used as nouns.
+    
+    Examples
+    --------
+    Bad:
+        The method proposed in~\\cite{} shows a decrease in methanol toxicity.
+
+    Good:
+        A proposed method shows a decrease in methanol toxicity~\\cite{}.
+    """
     return [m.span() for m in matches]
 
 @type_rule(r'[^~]\\cite{')
 def check_no_space_before_cite(text, matches):
-    """Citations should be preceded by a single, non-breaking space '~'."""
+    """Citations should be preceded by a single, non-breaking space '~'.
+
+    Examples
+    --------
+    Bad:
+        Apollo 17's "The Blue Marble" \\cite{} photo of the Earth became an icon
+        in the environmental movement.
+
+    Good:
+        Apollo 17's "The Blue Marble"~\\cite{} photo of the Earth became an icon
+        in the environmental movement.
+    """
     return [m.span() for m in matches]
 
 @type_rule(r'\d+%')
