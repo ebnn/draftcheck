@@ -200,7 +200,7 @@ def check_weasel_words(text, matches):
     """Weasel words should be avoided."""
     return [m.span() for m in matches]
 
-@style_rule(r'\b(am|are|were|being|is|been|was|be)\s(\w+ed|{0})'.format(join_patterns(IRREGULAR_VERBS)))
+@style_rule(r'\b(am|are|were|being|is|been|was|be)\s([a-z]+ed|{0})'.format(join_patterns(IRREGULAR_VERBS)))
 def check_passive_voice(text, matches):
     """Passive voice should be avoided."""
     return [m.span() for m in matches]
