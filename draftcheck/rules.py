@@ -38,9 +38,9 @@ def rule(pattern=None, show_spaces=False, in_env='paragraph'):
 @rule(r'\s+\\footnote{', show_spaces=True)
 def check_space_before_footnote(text, matches):
     """There should not be any spaces before footnotes.
-    
+
     Remove the extraneous spaces before the \\footnote command.
-    
+
     Examples
     --------
     Bad:
@@ -56,7 +56,7 @@ def check_space_before_footnote(text, matches):
 @rule(r'\.\\cite{')
 def check_cite_after_period(text, matches):
     """Citations should appear before periods, not after.
-    
+
     Move the \\cite command inside the sentence, before the period.
 
     Examples
@@ -72,7 +72,7 @@ def check_cite_after_period(text, matches):
 @rule(r'\b(:?in|as|on|by)[ ~]\\cite{')
 def check_cite_used_as_noun(text, matches):
     """Citations should not be used as nouns.
-    
+
     Examples
     --------
     Bad:
@@ -102,7 +102,7 @@ def check_no_space_before_cite(text, matches):
 @rule(r'\d+%')
 def check_unescaped_percentage(text, matches):
     """Percentage signs should be escaped.
-    
+
     Examples
     --------
     Bad:
@@ -146,8 +146,8 @@ def check_duplicate_word(text, matches):
 
 @rule(r'\.\.\.')
 def check_dot_dot_dot(text, matches):
-    """Ellipsis should be denoted by \\ldots, not '...'
-    
+    """Ellipsis should be denoted by \\ldots, not '...'.
+
     Example
     -------
     Bad:
@@ -175,7 +175,7 @@ def check_double_quote(text, matches):
 @rule(r"(?: |^)(``|`)|(''|')(?: |$)")
 def check_unmatched_quotes(text, matches):
     """Left quotes should be balanced by a matching right quote.
-    
+
     Example
     -------
     Bad:
