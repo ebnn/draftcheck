@@ -118,6 +118,20 @@ def check_space_before_punctuation(text, matches):
     """Punctuation characters should not be preceded by a space."""
     return [m.span() for m in matches]
 
+@rule(r'\w+\(|\)\w+', show_spaces=True)
+def check_no_space_next_to_parentheses(text, matches):
+    """Parentheses should be separated from text with a space.
+
+    Example
+    -------
+    Bad:
+        I went to his house yesterday(my third attempt to see him).
+
+    Good:
+        I went to his house yesterday (my third attempt to see him).
+    """
+    return [m.span() for m in matches]
+
 @rule(r'\d+\s?x\d+')
 def check_incorrect_usage_of_x_as_times(text, matches):
     """In the context of 'times', use $\\times$ instead of 'x'"""
