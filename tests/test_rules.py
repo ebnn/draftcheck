@@ -14,7 +14,7 @@ def normalise_text(text):
 def test_examples():
     import re
 
-    example_regex = re.compile(r'(Good|Bad):\n(.+?)\n\n', flags=re.S)
+    example_regex = re.compile(r'(Good|Bad):\n(.+?)(?:\n\n|\s*$)', flags=re.S)
     for r in rules.RULES_LIST:
         for match in example_regex.finditer(r.__doc__):
             expected = False if match.group(1) == 'Good' else True
