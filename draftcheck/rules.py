@@ -69,7 +69,7 @@ def check_cite_after_period(text, matches):
     """
     return [m.span() for m in matches]
 
-@rule(r'(:?in|as|on|by)[ ~]\\cite{')
+@rule(r'\b(:?in|as|on|by)[ ~]\\cite{')
 def check_cite_used_as_noun(text, matches):
     """Citations should not be used as nouns.
     
