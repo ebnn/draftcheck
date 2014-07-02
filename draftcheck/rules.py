@@ -157,6 +157,20 @@ def check_dot_dot_dot(text, matches):
         New York, Tokyo, Budapest, \\ldots
     """
     return [m.span() for m in matches]
+
+@rule(r'"')
+def check_double_quote(text, matches):
+    """Use left and right quotation marks `` and '' rather than ".
+
+    Example
+    -------
+    Bad:
+        "Very much indeed," Alice said politely.
+
+    Good:
+        ``Very much indeed,'' Alice said politely.
+    """
+    return [m.span() for m in matches]
 def validate(text, env='paragraph'):
     for r in RULES_LIST:
         for match in r(text, env):
