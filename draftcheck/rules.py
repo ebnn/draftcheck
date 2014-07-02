@@ -171,6 +171,41 @@ def check_double_quote(text, matches):
         ``Very much indeed,'' Alice said politely.
     """
     return [m.span() for m in matches]
+
+@rule(r"(?: |^)(``|`)|(''|')(?: |$)")
+def check_unmatched_quotes(text, matches):
+    """Left quotes should be balanced by a matching right quote.
+    
+    Example
+    -------
+    Bad:
+        ``Very much indeed,' Alice said politely.
+
+    Bad:
+        ``Very much indeed, Alice said politely.
+
+    Good:
+        ``Very much indeed,'' Alice said politely.
+    """
+    unmatched = []
+    for m in matches:
+        if m.group(1) is not None:
+            # Opening quote
+            unmatched.append(m)
+        else:
+            if len(unmatched) == 0:
+                yield m.span()
+            else:
+                if unmatched[-1].group(1) == '`' and m.group(2) == "''":
+                    yield unmatched[-1].span()
+                elif unmatched[-1].group(1) == '``' and m.group(2) == "'":
+                    yield unmatched[-1].span()
+
+                unmatched.pop()
+
+    for m in unmatched:
+        yield m
+
 def validate(text, env='paragraph'):
     for r in RULES_LIST:
         for match in r(text, env):
