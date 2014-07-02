@@ -27,7 +27,7 @@ def pad_string(text, span, size):
 
     return padded_str, start_index
 
-def check_line(lineno, line, env, args):
+def check_line(lineno, line, span, env, args):
     """Check a line for rule violations and prints information to stdout.
 
     Parameters
@@ -37,6 +37,9 @@ def check_line(lineno, line, env, args):
 
     line : str
         The line of text to check.
+
+    span : tuple(int, int)
+        The start and end index to check.
 
     env : str
         The current LaTeX environment.
@@ -51,7 +54,9 @@ def check_line(lineno, line, env, args):
     """
     num_errors = 0
 
-    for r, match in validate(line, env):
+    for r, match in validate(line[span[0]:span[1]], env):
+        match = (match[0] + span[0], match[1] + span[0])
+
         prefix = '{0}:{1}:{2}:'.format('file', lineno, match[0])
         print prefix,
 
@@ -76,6 +81,7 @@ def main(args):
     # Regular expressions to extract environments
     env_begin_regex = re.compile(r'\\begin{(\w+)}')
     env_end_regex = re.compile(r'\\end{(\w+)}')
+    math_env_regex = re.compile(r'(?:\$\$|\$|\\\[)(.+?)(?:\$\$|\$|\\\])')
 
     for filename in args.filenames:
         with open(filename, 'r') as infile:
@@ -92,8 +98,20 @@ def main(args):
                 if match:
                     envs.pop()
 
-                # Check the line for mistakes and update the mistake count
-                num_errors += check_line(lineno + 1, line, envs[-1], args)
+                chunks = math_env_regex.split(line)
+                if len(chunks) == 1:
+                    num_errors += check_line(lineno + 1, chunks[0],
+                            (0, len(chunks[0])), envs[-1], args)
+                else:
+                    offset = 0
+                    for text_chunk, math_chunk in zip(chunks[::2], chunks[1::2]):
+                        num_errors += check_line(lineno + 1, text_chunk,
+                                (offset, offset + len(text_chunk)), envs[-1], args)
+                        offset += len(text_chunk)
+
+                        num_errors += check_line(lineno + 1, math_chunk,
+                                (offset, offset + len(math_chunk)), 'math', args)
+                        offset += len(math_chunk)
 
     print
     print 'Total of {0} mistakes found.'.format(num_errors)
