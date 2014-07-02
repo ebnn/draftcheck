@@ -1,6 +1,7 @@
 import re
 import functools
 from helpers import join_patterns
+from tagger import is_adjective
 
 RULES_LIST = []
 
@@ -215,10 +216,10 @@ def check_space_surrounded_dash(text, matches):
     """A dash surrounded by a space should be an em-dash: '---'."""
     return [m.span() for m in matches]
 
-@style_rule(r'\bnot\s(un|in)[a-z]+(ed|ble|ing|ent|thy)\b')
+@style_rule(r'\bnot (?:un|in)([a-z]+)\b')
 def check_double_negative(text, matches):
     """Avoid double negatives."""
-    return [m.span() for m in matches]
+    return [m.span() for m in matches if is_adjective(m.group(1))]
 
 @style_rule(r'\b(\w+)\s+\1\b(?![^{]*})')
 def check_duplicate_word(text, matches):
@@ -236,7 +237,7 @@ def check_duplicate_word(text, matches):
     """
     return [m.span() for m in matches]
 
-@style_rule(r'\b(does|did|would) (not|doesn\'t|didn\'t) (\w+)')
+@style_rule(r'\b(((does|did|would) not)|(doesn\'t|didn\'t)) (\w+)')
 def check_negatives(text, matches):
     """Negatives should be rephrases as affirmatives.
     
