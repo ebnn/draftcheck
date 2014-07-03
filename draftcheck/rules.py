@@ -262,6 +262,20 @@ def check_double_dollar_math(text, matches):
     """
     return [m.span() for m in matches]
 
+@rule(r'\d\s?-\s?\d')
+def check_numeric_range_dash(text, matches):
+    """A hyphen should not be used for numeric ranges, use endash '--' instead.
+
+    Example
+    -------
+    Bad:
+        A description of medical practices at the time are on pages 17-20.
+
+    Good:
+        A description of medical practices at the time are on pages 17--20.
+    """
+    return [m.span() for m in matches]
+
 def get_brief(rule):
     return rule.__doc__.split('\n\n')[0]
 
