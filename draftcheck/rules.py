@@ -23,13 +23,15 @@ def rule(pattern=None, show_spaces=False, in_env='paragraph'):
 
     def inner_rule(func):
         def wrapper(text, env):
-            if env == in_env:
+            if in_env == 'all' or env == in_env:
                 return func(text, regexpr.finditer(text))
             return []
 
         wrapper.__id = len(RULES_LIST) + 1
         wrapper.show_spaces = show_spaces
+        wrapper.in_env = in_env
         wrapper.__doc__ = func.__doc__
+
         RULES_LIST.append(wrapper)
 
         return wrapper
@@ -220,10 +222,6 @@ def check_unmatched_quotes(text, matches):
     for m in unmatched:
         yield m
 
-def validate(text, env='paragraph'):
-    for r in RULES_LIST:
-        for match in r(text, env):
-            yield r, match
 
 def get_brief(rule):
     return rule.__doc__.split('\n\n')[0]
