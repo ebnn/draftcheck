@@ -117,7 +117,18 @@ def check_unescaped_percentage(text, matches):
 
 @rule(r'\s[,;.!?]', show_spaces=True)
 def check_space_before_punctuation(text, matches):
-    """Punctuation characters should not be preceded by a space."""
+    """Punctuation characters should not be preceded by a space.
+    
+    Example
+    -------
+    Bad:
+        Nether Stowey, where Coleridge wrote The Rime of the Ancient Mariner ,
+        is a few miles from Bridgewater.
+
+    Good:
+        Nether Stowey, where Coleridge wrote The Rime of the Ancient Mariner,
+        is a few miles from Bridgewater.
+    """
     return [m.span() for m in matches]
 
 @rule(r'\w+\(|\)\w+', show_spaces=True)
@@ -136,12 +147,30 @@ def check_no_space_next_to_parentheses(text, matches):
 
 @rule(r'\d+\s?x\d+')
 def check_incorrect_usage_of_x_as_times(text, matches):
-    """In the context of 'times', use $\\times$ instead of 'x'"""
+    """In the context of 'times', use $\\times$ instead of 'x'.
+    
+    Example
+    -------
+    Bad:
+        We used an 10x10 grid for the image filter.
+
+    Good:
+        We used an $10 \\times 10$ grid for the image filter.
+    """
     return [m.span() for m in matches]
 
 @rule('\s-\s')
 def check_space_surrounded_dash(text, matches):
-    """A dash surrounded by a space should be an em-dash: '---'."""
+    """A dash surrounded by a space should be an em-dash: '---'.
+    
+    Example
+    -------
+    Bad:
+        He only desired one thing - success.
+
+    Good:
+        He only desired one thing --- success.
+    """
     return [m.span() for m in matches]
 
 @rule(r'\b(\w+)\s+\1\b(?![^{]*})')
