@@ -220,7 +220,7 @@ def check_unmatched_quotes(text, matches):
                 unmatched.pop()
 
     for m in unmatched:
-        yield m
+        yield m.span()
 
 
 def get_brief(rule):
