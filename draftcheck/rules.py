@@ -222,6 +222,26 @@ def check_unmatched_quotes(text, matches):
     for m in unmatched:
         yield m.span()
 
+@rule(r'\\begin{center}', in_env='all')
+def check_begin_center(text, matches):
+    """\\centering should be used instead of \\begin{center}.
+
+    Example
+    -------
+    Bad:
+        \\begin{figure}
+            \\begin{center}
+                \\includegraphics
+            \\end{center}
+        \\end{figure}
+
+    Good:
+        \\begin{figure}
+            \\centering
+            \\includegraphics
+        \\end{figure}
+    """
+    return [m.span() for m in matches]
 
 def get_brief(rule):
     return rule.__doc__.split('\n\n')[0]
