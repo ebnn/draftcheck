@@ -243,6 +243,25 @@ def check_begin_center(text, matches):
     """
     return [m.span() for m in matches]
 
+@rule(r'^\$\$', in_env='math')
+def check_double_dollar_math(text, matches):
+    """\[ or \\begin{equation} should be used instead of $$.
+
+    Example
+    -------
+    Bad:
+        $$ 1 + 1 = 2 $$
+
+    Good:
+        \\[ 1 + 1 = 2 \\]
+
+    Good:
+        \\begin{equation}
+            1 + 1 = 2
+        \\end{equation}
+    """
+    return [m.span() for m in matches]
+
 def get_brief(rule):
     return rule.__doc__.split('\n\n')[0]
 
