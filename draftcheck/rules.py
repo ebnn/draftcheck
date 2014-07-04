@@ -320,6 +320,11 @@ def check_multiple_cite(text, matches):
     """Use \\cite{..., ...} for multiple citations."""
     return [m.span() for m in matches]
 
+@rule(r'\d(m|A|kg|s|K|mol|cd)\b')
+def check_number_next_to_unit(text, matches):
+    """Place a non-breaking space between a number and its unit."""
+    return [m.span() for m in matches]
+
 def get_brief(rule):
     return rule.__doc__.split('\n\n')[0]
 
