@@ -325,6 +325,11 @@ def check_number_next_to_unit(text, matches):
     """Place a non-breaking space between a number and its unit."""
     return [m.span() for m in matches]
 
+@rule(r'[^\\](sin|cos|tan|log|max|min)', in_env='math')
+def check_unescaped_named_math_operators(text, matches):
+    """Precede named mathematical operators with a backslash."""
+    return [m.span() for m in matches]
+
 def get_brief(rule):
     return rule.__doc__.split('\n\n')[0]
 
