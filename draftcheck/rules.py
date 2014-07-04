@@ -310,6 +310,11 @@ def check_footnote_before_punctuation(text, matches):
     """Place footnotes after punctuation marks."""
     return [m.span() for m in matches]
 
+@rule(r'\b(<|>)\b')
+def check_relational_operators(text, matches):
+    """Use \\langle and \\rangle instead of '<' and '>' for angle brackets."""
+    return [m.span() for m in matches]
+
 def get_brief(rule):
     return rule.__doc__.split('\n\n')[0]
 
