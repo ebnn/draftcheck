@@ -39,7 +39,7 @@ def rule(pattern=None, show_spaces=False, in_env='paragraph'):
 
 @rule(r'\s+\\footnote{', show_spaces=True)
 def check_space_before_footnote(text, matches):
-    """There should not be any spaces before footnotes.
+    """Do not precede footnotes with spaces.
 
     Remove the extraneous spaces before the \\footnote command.
 
@@ -57,7 +57,7 @@ def check_space_before_footnote(text, matches):
 
 @rule(r'\.\\cite{')
 def check_cite_after_period(text, matches):
-    """Citations should appear before periods, not after.
+    """Place citations before periods with a non-breaking space.
 
     Move the \\cite command inside the sentence, before the period.
 
@@ -73,7 +73,7 @@ def check_cite_after_period(text, matches):
 
 @rule(r'\b(:?in|as|on|by)[ ~]\\cite{')
 def check_cite_used_as_noun(text, matches):
-    """Citations should not be used as nouns.
+    """Avoid using citations as nouns.
 
     Examples
     --------
@@ -87,7 +87,7 @@ def check_cite_used_as_noun(text, matches):
 
 @rule(r'[^~]\\cite{')
 def check_no_space_before_cite(text, matches):
-    """Citations should be preceded by a single, non-breaking space '~'.
+    """Place a single, non-breaking space '~' before citations.
 
     Examples
     --------
@@ -103,7 +103,7 @@ def check_no_space_before_cite(text, matches):
 
 @rule(r'\d+%')
 def check_unescaped_percentage(text, matches):
-    """Percentage signs should be escaped.
+    """Escape percentages with backslash.
 
     Examples
     --------
@@ -117,7 +117,7 @@ def check_unescaped_percentage(text, matches):
 
 @rule(r'\s[,;.!?]', show_spaces=True)
 def check_space_before_punctuation(text, matches):
-    """Punctuation characters should not be preceded by a space.
+    """Do not precede punctuation characters with spaces.
     
     Example
     -------
@@ -133,7 +133,7 @@ def check_space_before_punctuation(text, matches):
 
 @rule(r'\w+\(|\)\w+', show_spaces=True)
 def check_no_space_next_to_parentheses(text, matches):
-    """Parentheses should be separated from text with a space.
+    """Separate parentheses from text with a space.
 
     Example
     -------
@@ -159,9 +159,9 @@ def check_incorrect_usage_of_x_as_times(text, matches):
     """
     return [m.span() for m in matches]
 
-@rule('\s-\s')
+@rule('[a-z]+\s-\s[a-z]+')
 def check_space_surrounded_dash(text, matches):
-    """A dash surrounded by a space should be an em-dash: '---'.
+    """Use an em-dash '---' to denote parenthetical breaks or statements.
     
     Example
     -------
@@ -191,7 +191,7 @@ def check_duplicate_word(text, matches):
 
 @rule(r'\.\.\.')
 def check_dot_dot_dot(text, matches):
-    """Ellipsis should be denoted by \\ldots, not '...'.
+    """Typeset ellipses by \\ldots, not '...'.
 
     Example
     -------
@@ -219,7 +219,7 @@ def check_double_quote(text, matches):
 
 @rule(r"(?: |^)(``|`)|(''|')(?: |$)")
 def check_unmatched_quotes(text, matches):
-    """Left quotes should be balanced by a matching right quote.
+    """Left quotes must be balanced by a matching right quote.
 
     Example
     -------
@@ -253,7 +253,7 @@ def check_unmatched_quotes(text, matches):
 
 @rule(r'\\begin{center}', in_env='all')
 def check_begin_center(text, matches):
-    """\\centering should be used instead of \\begin{center}.
+    """Use \\centering instead of \\begin{center}.
 
     Example
     -------
@@ -274,7 +274,7 @@ def check_begin_center(text, matches):
 
 @rule(r'^\$\$', in_env='math')
 def check_double_dollar_math(text, matches):
-    """\[ or \\begin{equation} should be used instead of $$.
+    """Use \[ or \\begin{equation} instead of $$.
 
     Example
     -------
@@ -293,7 +293,7 @@ def check_double_dollar_math(text, matches):
 
 @rule(r'\d\s?-\s?\d')
 def check_numeric_range_dash(text, matches):
-    """A hyphen should not be used for numeric ranges, use endash '--' instead.
+    """Use endash '--' for numeric ranges instead of hyphens.
 
     Example
     -------
