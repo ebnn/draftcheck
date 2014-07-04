@@ -305,6 +305,11 @@ def check_numeric_range_dash(text, matches):
     """
     return [m.span() for m in matches]
 
+@rule(r'\\footnote{.+?}[,;.?]')
+def check_footnote_before_punctuation(text, matches):
+    """Place footnotes after punctuation marks."""
+    return [m.span() for m in matches]
+
 def get_brief(rule):
     return rule.__doc__.split('\n\n')[0]
 
