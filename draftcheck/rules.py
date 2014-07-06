@@ -402,21 +402,12 @@ def check_incorrect_abbreviations():
     CHANGES = {
         r'et\. al\.': 'et al.',
         r'etc[^\.]': 'etc.',
-        r'i\.e[^\.]': '\usepackage[T1]{fontenc}',
-        r'umlaute': '\usepackage[latin1]{inputenc}',
-        r'isolatin': '\usepackage[isolatin]{inputenc}',
-        r'isolatin1': '\usepackage[latin1]{inputenc}',
-        r'fancyheadings': 'fancyhdr',
-        r'mathptm': 'mathptmx',
-        r'mathpple': 'mathpazo',
-        r'epsf': 'graphicx',
-        r'epsfig': 'graphicx',
-        r'doublespace': 'setspace',
-        r'scrpage': 'scrpage2'
+        r'i\.e[^\.]': 'i.e.',
+        r'e\.g[^\.]': 'e.g.',
+        r'Dr\.': 'Dr',
     }
-    INCORRECT = [r'et\. al\.', r'etc[^\.]', r'i\.e[^\.]', r'e\.g[^\.]', 'Dr\. ']
-    CORRECT = ['et al.', 'etc.', 'i.e.', 'e.g.', 'Dr']
-    for incorrect, correct in zip(INCORRECT, CORRECT):
+
+    for incorrect, correct in CHANGES.items():
         yield r'\b' + incorrect + r'\b', correct
 
 @rule_generator()
