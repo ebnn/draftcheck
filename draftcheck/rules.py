@@ -370,6 +370,11 @@ def check_sloppy_command(text, matches):
     """Avoid the \\sloppy command."""
     return [m.span() for m in matches]
 
+@rule(r"'''|```")
+def check_triple_quote(text, matches):
+    """Use a thin space \, to separate quotes."""
+    return [m.span() for m in matches]
+
 def get_brief(rule):
     return rule.__doc__.split('\n\n')[0]
 
