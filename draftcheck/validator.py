@@ -34,8 +34,14 @@ class Validator(object):
         if match:
             self._envs.pop()
 
-        # Split the text into chunks of 'text' and 'math'
-        chunks = Validator.math_env_regex.split(line)
+        if self._envs[-1] == 'math':
+            # Because we are already in maths mode, there is no need to detect
+            # nested math environments.
+            chunks = ['', line]
+        else:
+            # Split the text into chunks of 'text' and 'math'
+            chunks = Validator.math_env_regex.split(line)
+
         chunk_envs = itertools.cycle([self._envs[-1], 'math'])
 
         offset = 0
