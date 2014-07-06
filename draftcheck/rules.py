@@ -184,14 +184,14 @@ def check_incorrect_usage_of_x_as_times(text, matches):
     """
     return [m.span() for m in matches]
 
-@rule('[a-z]+\s?-\s?[a-z]+')
+@rule('[a-z]+\s-\s[a-z]+')
 def check_space_surrounded_dash(text, matches):
     """Use an em-dash '---' to denote parenthetical breaks or statements.
     
     Example
     -------
     Bad:
-        He only desired one thing-success.
+        He only desired one thing - success.
 
     Good:
         He only desired one thing --- success.
