@@ -395,6 +395,11 @@ def check_dot_dot_dot_maths(text, matches):
     """Use \\cdots to denote ellipsis in maths."""
     return [m.span() for m in matches]
 
+@rule(r'(?<!\\url{)(\bhttps?://)[^\s.]+\.[-A-Za-z0-9+&@#/%?=~_|!:,.;]+')
+def check_bare_urls(text, matches):
+    """Wrap URLs with the \\url command."""
+    return [m.span() for m in matches]
+
 @rule_generator()
 def check_incorrect_abbreviations():
     """Punctuate abbreviations correctly. Should be "{0}"."""
