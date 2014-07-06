@@ -360,6 +360,11 @@ def check_abbreviation_innerword_spacing(text, matches):
     """Place a '\\ ' (backslash space) after a period if it is not the end of the sentence."""
     return [m.span() for m in matches]
 
+@rule(r'\\def\\[a-z]+{')
+def check_def_command(text, matches):
+    """Do not use the \\def command. Use \\newcommand instead."""
+    return [m.span() for m in matches]
+
 def get_brief(rule):
     return rule.__doc__.split('\n\n')[0]
 
