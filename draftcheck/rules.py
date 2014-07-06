@@ -112,6 +112,20 @@ def check_no_space_before_cite(text, matches):
     """
     return [m.span() for m in matches]
 
+@rule(r'[^~]\\ref{')
+def check_no_space_before_ref(text, matches):
+    """Place a single, non-breaking space '~' before references.
+
+    Examples
+    --------
+    Bad:
+        The performance of the engine is shown in Figure \\ref{}.
+
+    Good:
+        The performance of the engine is shown in Figure~\\ref{}.
+    """
+    return [m.span() for m in matches]
+
 @rule(r'\d+%')
 def check_unescaped_percentage(text, matches):
     """Escape percentages with backslash.
