@@ -44,7 +44,7 @@ def main(args):
             validator = Validator()
             for lineno, line in enumerate(infile):
                 for rule, span in validator.validate(line):
-                    print_warning(lineno, line, span, rule, args)
+                    print_warning(lineno, line.strip(), span, rule, args)
                     num_errors += 1
 
     print
