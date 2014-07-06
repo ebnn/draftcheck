@@ -380,6 +380,86 @@ def check_extra_line_after_maths(text, matches, in_env='math'):
     """Do not end the last line of a display maths environment with \\."""
     return [m.span() for m in matches]
 
+@rule(r'1st|2nd|3rd')
+def check_unspelt_ordinal_numbers(text, matches):
+    """Spell out ordinal numbers (1st, 2nd, etc.) in words."""
+    return [m.span() for m in matches]
+
+@rule(r'[a-z]+ \d [a-z]+')
+def check_unspelt_single_digit_numbers(text, matches):
+    """Spell out single digit numbers in words."""
+    return [m.span() for m in matches]
+
+@rule(r'[a-z]+ \d [a-z]+')
+def check_unspelt_single_digit_numbers(text, matches):
+    """Spell out single digit numbers in words."""
+    return [m.span() for m in matches]
+
+@rule_generator()
+def check_incorrect_abbreviations():
+    """Punctuate abbreviations correctly. Should be "{0}"."""
+
+    CHANGES = {
+        r'et\. al\.': 'et al.',
+        r'etc[^\.]': 'etc.',
+        r'i\.e[^\.]': '\usepackage[T1]{fontenc}',
+        r'umlaute': '\usepackage[latin1]{inputenc}',
+        r'isolatin': '\usepackage[isolatin]{inputenc}',
+        r'isolatin1': '\usepackage[latin1]{inputenc}',
+        r'fancyheadings': 'fancyhdr',
+        r'mathptm': 'mathptmx',
+        r'mathpple': 'mathpazo',
+        r'epsf': 'graphicx',
+        r'epsfig': 'graphicx',
+        r'doublespace': 'setspace',
+        r'scrpage': 'scrpage2'
+    }
+    INCORRECT = [r'et\. al\.', r'etc[^\.]', r'i\.e[^\.]', r'e\.g[^\.]', 'Dr\. ']
+    CORRECT = ['et al.', 'etc.', 'i.e.', 'e.g.', 'Dr']
+    for incorrect, correct in zip(INCORRECT, CORRECT):
+        yield r'\b' + incorrect + r'\b', correct
+
+@rule_generator()
+def check_obsolete_commands():
+    """Use the \\{0} command instead."""
+
+    INCORRECT = ['rm', 'tt', 'it', 'bf', 'sc', 'sf', 'sl', 'over', 'centerline']
+    CORRECT = ['textrm', 'texttt', 'textit', 'textbf', 'textsc', 'textsf', 'textsl', 'frac', 'centering']
+    for incorrect, correct in zip(INCORRECT, CORRECT):
+        yield '\\' + incorrect + '{', correct
+
+@rule_generator()
+def check_obsolete_packages():
+    """Avoid obsolete packages. Use {0} instead."""
+
+    CHANGES = {
+        'a4': 'a4paper',
+        'a4wide': 'a4paper',
+        't1enc': '\usepackage[T1]{fontenc}',
+        'umlaute': '\usepackage[latin1]{inputenc}',
+        'isolatin': '\usepackage[isolatin]{inputenc}',
+        'isolatin1': '\usepackage[latin1]{inputenc}',
+        'fancyheadings': 'fancyhdr',
+        'mathptm': 'mathptmx',
+        'mathpple': 'mathpazo',
+        'epsf': 'graphicx',
+        'epsfig': 'graphicx',
+        'doublespace': 'setspace',
+        'scrpage': 'scrpage2'
+    }
+
+    for incorrect, correct in CHANGES.items():
+        yield '\\' + incorrect + '{', correct
+
+@rule_generator()
+def check_obsolete_environments():
+    """Use the {0} instead."""
+
+    INCORRECT = ['eqnarray', 'appendix']
+    CORRECT = ['"align" environment', '\\appendix command']
+    for incorrect, correct in zip(INCORRECT, CORRECT):
+        yield '\\begin{' + incorrect + '}', correct
+
 def get_brief(rule):
     return rule.__doc__.split('\n\n')[0]
 
