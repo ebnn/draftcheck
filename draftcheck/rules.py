@@ -375,11 +375,6 @@ def check_triple_quote(text, matches):
     """Use a thin space \, to separate quotes."""
     return [m.span() for m in matches]
 
-@rule(r'\\\s+$')
-def check_extra_line_after_maths(text, matches, in_env='math'):
-    """Do not end the last line of a display maths environment with \\."""
-    return [m.span() for m in matches]
-
 @rule(r'1st|2nd|3rd')
 def check_unspelt_ordinal_numbers(text, matches):
     """Spell out ordinal numbers (1st, 2nd, etc.) in words."""
