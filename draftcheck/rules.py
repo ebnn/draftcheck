@@ -414,9 +414,19 @@ def check_incorrect_abbreviations():
 def check_obsolete_commands():
     """Use the \\{0} command instead."""
 
-    INCORRECT = ['rm', 'tt', 'it', 'bf', 'sc', 'sf', 'sl', 'over', 'centerline']
-    CORRECT = ['textrm', 'texttt', 'textit', 'textbf', 'textsc', 'textsf', 'textsl', 'frac', 'centering']
-    for incorrect, correct in zip(INCORRECT, CORRECT):
+    CHANGES = {
+        'rm': 'textrm',
+        'tt': 'texttt',
+        'it': 'textit',
+        'bf': 'textbf',
+        'sc': 'textsc',
+        'sf': 'textsf',
+        'sl': 'textsl',
+        'over': 'frac',
+        'centerline': 'centering'
+    }
+
+    for incorrect, correct in CHANGES.items():
         yield '\\' + incorrect + '{', correct
 
 @rule_generator()
