@@ -375,6 +375,11 @@ def check_triple_quote(text, matches):
     """Use a thin space \, to separate quotes."""
     return [m.span() for m in matches]
 
+@rule(r'\\\s+$')
+def check_extra_line_after_maths(text, matches, in_env='math'):
+    """Do not end the last line of a display maths environment with \\."""
+    return [m.span() for m in matches]
+
 def get_brief(rule):
     return rule.__doc__.split('\n\n')[0]
 
