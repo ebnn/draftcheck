@@ -355,6 +355,11 @@ def check_unescaped_named_math_operators(text, matches):
     """Precede named mathematical operators with a backslash."""
     return [m.span() for m in matches]
 
+@rule(r'\b(e\.g\.|i\.e\.)(?!\\ )')
+def check_abbreviation_innerword_spacing(text, matches):
+    """Place a '\\ ' (backslash space) after a period if it is not the end of the sentence."""
+    return [m.span() for m in matches]
+
 def get_brief(rule):
     return rule.__doc__.split('\n\n')[0]
 
