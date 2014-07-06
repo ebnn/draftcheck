@@ -28,13 +28,24 @@ def rule(pattern=None, show_spaces=False, in_env='paragraph'):
             return []
 
         wrapper.__id = len(RULES_LIST) + 1
+        wrapper.__doc__ = func.__doc__
+
         wrapper.show_spaces = show_spaces
         wrapper.in_env = in_env
-        wrapper.__doc__ = func.__doc__
 
         RULES_LIST.append(wrapper)
 
         return wrapper
+    return inner_rule
+
+def rule_generator(pattern=None, show_spaces=False, in_env='paragraph'):
+    def inner_rule(func):
+        for r in func():
+            @rule(pattern=r[0], show_spaces=show_spaces, in_env=in_env)
+            def generated_rule(text, matches):
+                return [m.span() for m in matches]
+
+            RULES_LIST[-1].__doc__ = func.__doc__.format(*r[1:])
     return inner_rule
 
 @rule(r'\s+\\footnote{', show_spaces=True)
