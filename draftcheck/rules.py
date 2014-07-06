@@ -365,6 +365,11 @@ def check_def_command(text, matches):
     """Do not use the \\def command. Use \\newcommand instead."""
     return [m.span() for m in matches]
 
+@rule(r'\\sloppy')
+def check_sloppy_command(text, matches):
+    """Avoid the \\sloppy command."""
+    return [m.span() for m in matches]
+
 def get_brief(rule):
     return rule.__doc__.split('\n\n')[0]
 
