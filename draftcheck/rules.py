@@ -385,11 +385,6 @@ def check_unspelt_single_digit_numbers(text, matches):
     """Spell out single digit numbers in words."""
     return [m.span() for m in matches]
 
-@rule(r'[a-z]+ \d [a-z]+')
-def check_unspelt_single_digit_numbers(text, matches):
-    """Spell out single digit numbers in words."""
-    return [m.span() for m in matches]
-
 @rule(r',\s*\.\.\.\s*,', in_env='math')
 def check_dot_dot_dot_maths(text, matches):
     """Use \\cdots to denote ellipsis in maths."""
