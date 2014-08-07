@@ -1,3 +1,5 @@
+"""This module contains various helper functions."""
+
 def join_patterns(patterns):
     """Join several regular expression patterns together with 'or's.
     

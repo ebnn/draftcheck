@@ -1,3 +1,5 @@
+"""This modules contains code to find rule violations in text."""
+
 import rules
 import itertools
 import re

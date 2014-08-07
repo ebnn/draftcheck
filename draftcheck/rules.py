@@ -1,3 +1,5 @@
+"""This module contains rule definitions."""
+
 import re
 import functools
 from helpers import join_patterns
