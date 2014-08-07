@@ -4,6 +4,7 @@ import re
 from rules import get_brief, get_detail
 from validator import Validator
 
+
 def pad_string(text, span, size):
     left_str = text[max(0, span[0] - size):span[0]]
     right_str = text[span[1]:min(len(text), span[1] + size)]
@@ -14,12 +15,13 @@ def pad_string(text, span, size):
         text_format = '...' + text_format
 
     if len(right_str) == size:
-        text_format = text_format + '...'
+        text_format += '...'
 
     padded_str = text_format.format(left_str, text[span[0]:span[1]], right_str)
     start_index = len(left_str) + (3 if len(left_str) == size else 0)
 
     return padded_str, start_index
+
 
 def print_warning(lineno, line, span, rule, args):
     prefix = '{0}:{1}:{2}:'.format('file', lineno, span[0])
@@ -35,6 +37,7 @@ def print_warning(lineno, line, span, rule, args):
     print "\t[R{0:03d}]".format(rule.__id), get_brief(rule)
     print
 
+
 def main(args):
     # Count the total number of errors
     num_errors = 0
@@ -49,6 +52,7 @@ def main(args):
 
     print
     print 'Total of {0} mistakes found.'.format(num_errors)
+
 
 if __name__ == '__main__':
     import sys
