@@ -4,6 +4,7 @@ import rules
 import itertools
 import re
 
+# Different LaTeX environments
 LATEX_ENVS = {
     'math': ['math', 'array', 'eqnarray', 'equation', 'align'],
     'paragraph': ['abstract', 'document', 'titlepage']
@@ -11,10 +12,24 @@ LATEX_ENVS = {
 
 LATEX_ENVS = dict((k, env) for env in LATEX_ENVS for k in LATEX_ENVS[env])
 
+
 def validate(text, env='paragraph'):
+    """Validate a particular piece of text.
+
+    This function finds rules that are violated by the text.
+
+    Parameters
+    ----------
+    text : string
+        The text to validate.
+    env : string
+        The LaTeX environment type. This is used for environment sensitive
+        rules. Defaults to 'paragraph'.
+    """
     for rule in rules.RULES_LIST:
         for span in rule(text, env):
             yield rule, span
+
 
 class Validator(object):
     # Regular expressions to extract environments

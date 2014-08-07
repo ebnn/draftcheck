@@ -34,7 +34,7 @@ def print_warning(lineno, line, span, rule, args):
         print padded_str
 
     print ' ' * (len(prefix) + start_index + 1) + '^' * (span[1] - span[0])
-    print "\t[R{0:03d}]".format(rule.__id), get_brief(rule)
+    print "\t[R{0:03d}]".format(rule.id), get_brief(rule)
     print
 
 

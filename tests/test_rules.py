@@ -6,7 +6,7 @@ import draftcheck.validator as validator
 def found_error(rule, text):
     print text
     for r, _ in validator.Validator().validate(text):
-        if r.__id == rule.__id:
+        if r.id == rule.id:
             print r.__doc__
             return True
     return False
