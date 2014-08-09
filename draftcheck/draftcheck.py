@@ -22,8 +22,8 @@ def pad_string(text, span, size):
     return padded_str, start_index
 
 
-def print_warning(lineno, line, span, rule, args):
-    prefix = '{0}:{1}:{2}:'.format('file', lineno, span[0])
+def print_warning(fname, lineno, line, span, rule, args):
+    prefix = '{0}:{1}:{2}:'.format(fname, lineno, span[0])
     print prefix,
 
     padded_str, start_index = pad_string(line, span, 10)
@@ -41,12 +41,12 @@ def main(args):
     # Count the total number of errors
     num_errors = 0
 
-    for filename in args.filenames:
-        with open(filename, 'r') as infile:
+    for fname in args.filenames:
+        with open(fname, 'r') as infile:
             validator = Validator()
             for lineno, line in enumerate(infile):
                 for rule, span in validator.validate(line):
-                    print_warning(lineno, line.strip(), span, rule, args)
+                    print_warning(fname, lineno, line.strip(), span, rule, args)
                     num_errors += 1
 
     print
