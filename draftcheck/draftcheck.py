@@ -1,6 +1,5 @@
 #!/bin/python
 
-import re
 from rules import get_brief, get_detail
 from validator import Validator
 
@@ -55,13 +54,12 @@ def main(args):
 
 
 if __name__ == '__main__':
-    import sys
     import argparse
 
     parser = argparse.ArgumentParser(
-            description='Check for common mistakes in LaTeX documents.')
-    parser.add_argument('filenames', action='append', \
-            help='List of filenames to check')
+        description='Check for common mistakes in LaTeX documents.')
 
-    args = parser.parse_args()
-    main(args)
+    parser.add_argument('filenames', action='append',
+                        help='List of filenames to check')
+
+    main(parser.parse_args())

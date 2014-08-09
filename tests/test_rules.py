@@ -1,20 +1,24 @@
-from nose.tools import assert_true, assert_false
-
+from nose.tools import assert_equals
+from draftcheck.validator import Validator
 import draftcheck.rules as rules
-import draftcheck.validator as validator
+
 
 def found_error(rule, text):
-    print text
-    for r, _ in validator.Validator().validate(text):
+    """Return whether a particular rule has been violated."""
+    for r, _ in Validator().validate(text):
         if r.id == rule.id:
             print r.__doc__
             return True
     return False
 
+
 def normalise_text(text):
+    """Replace newlines and surrounding whitespace with a single space."""
     return ' '.join(map(lambda x: x.lstrip(), text.split('\n')))
 
+
 def test_examples():
+    """A test generator that creates tests from examples in rule docstrings."""
     import re
 
     example_regex = re.compile(r'(Good|Bad):\n(.+?)(?:\n\n|\s*$)', flags=re.S)
@@ -23,10 +27,4 @@ def test_examples():
             expected = False if match.group(1) == 'Good' else True
             text = normalise_text(match.group(2))
 
-            yield check_example, rule, text, expected
-
-def check_example(r, text, expected):
-    if expected is True:
-        assert_true(found_error(r, text), msg=text)
-    else:
-        assert_false(found_error(r, text), msg=text)
+            yield assert_equals, found_error(rule, text), expected

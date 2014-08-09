@@ -13,24 +13,6 @@ LATEX_ENVS = {
 LATEX_ENVS = dict((k, env) for env in LATEX_ENVS for k in LATEX_ENVS[env])
 
 
-def validate(text, env='paragraph'):
-    """Validate a particular piece of text.
-
-    This function finds rules that are violated by the text.
-
-    Parameters
-    ----------
-    text : string
-        The text to validate.
-    env : string
-        The LaTeX environment type. This is used for environment sensitive
-        rules. Defaults to 'paragraph'.
-    """
-    for rule in rules.RULES_LIST:
-        for span in rule(text, env):
-            yield rule, span
-
-
 class Validator(object):
     # Regular expressions to extract environments
     env_begin_regex = re.compile(r'\\begin{(\w+)}')
@@ -42,6 +24,24 @@ class Validator(object):
         self._envs = ['paragraph']
 
     def validate(self, line):
+        """Validate a particular line of text.
+
+        This function finds rules that are violated by the text. The validation
+        is performed in a stateful manner, with past calls to validate possibly
+        affecting the results of future calls.
+
+        Parameters
+        ----------
+        line : string
+            The line of text to validate.
+
+        Yields
+        ------
+        rule, span : (rule, (start, end))
+            The first element is the rule that is violated. The second element
+            is the tuple pair representing the start and end indices of the
+            substring which violates that rule.
+        """
         # Check if the environment has changed
         match = Validator.env_begin_regex.match(line)
         if match:
@@ -51,20 +51,23 @@ class Validator(object):
         if match:
             self._envs.pop()
 
+        # See if we need to extract inline math expressions
         if self._envs[-1] == 'math':
             # Because we are already in maths mode, there is no need to detect
             # nested math environments.
             chunks = ['', line]
         else:
-            # Split the text into chunks of 'text' and 'math'
+            # Split the text into chunks of text and inline maths
             chunks = Validator.math_env_regex.split(line)
 
+        # The chunks will alternate from text and maths
         chunk_envs = itertools.cycle([self._envs[-1], 'math'])
 
         offset = 0
         for chunk, chunk_env in zip(chunks, chunk_envs):
-            for rule, span in validate(chunk, chunk_env):
-                offsetted_span = (span[0] + offset, span[1] + offset)
-                yield rule, offsetted_span
+            for rule in rules.RULES_LIST:
+                for span in rule(chunk, chunk_env):
+                    offsetted_span = (span[0] + offset, span[1] + offset)
+                    yield rule, offsetted_span
 
             offset += len(chunk)

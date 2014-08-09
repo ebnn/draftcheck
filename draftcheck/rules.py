@@ -1,9 +1,8 @@
 """This module contains rule definitions."""
 
 import re
-import functools
-from helpers import join_patterns
 
+# Global rules list to store all the registered rules
 RULES_LIST = []
 
 
