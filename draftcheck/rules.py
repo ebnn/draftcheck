@@ -577,9 +577,12 @@ def check_obsolete_packages():
 def check_obsolete_environments():
     """Use the {0} instead."""
 
-    incorrect = ['eqnarray', 'appendix']
-    correct = ['"align" environment', '\\appendix command']
-    for incorrect, correct in zip(incorrect, correct):
+    changes = {
+        'eqnarray': '"align" environment',
+        'appendix': '\\appendix command'
+    }
+
+    for incorrect, correct in changes.items():
         yield '\\begin{' + incorrect + '}', correct
 
 
