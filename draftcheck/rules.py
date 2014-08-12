@@ -585,7 +585,3 @@ def check_obsolete_environments():
 
 def get_brief(r):
     return r.__doc__.split('\n\n')[0]
-
-
-def get_detail(r):
-    return r.__doc__.split('\n\n')[1]

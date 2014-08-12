@@ -1,4 +1,4 @@
-from rules import get_brief, get_detail
+from rules import get_brief
 from validator import Validator
 
 
@@ -31,7 +31,7 @@ def print_warning(fname, lineno, line, span, rule, args):
         print padded_str
 
     print ' ' * (len(prefix) + start_index + 1) + '^' * (span[1] - span[0])
-    print "\t[R{0:03d}]".format(rule.id), get_brief(rule)
+    print "\t[{0:03d}]".format(rule.id), get_brief(rule)
     print
 
 
