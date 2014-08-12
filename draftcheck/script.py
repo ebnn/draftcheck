@@ -57,5 +57,9 @@ def main():
                     print_warning(fname, lineno, line.strip(), span, rule, args)
                     num_errors += 1
 
-    print
-    print 'Total of {0} mistakes found.'.format(num_errors)
+    if num_errors > 0:
+        print '\nTotal of {0} mistakes found.'.format(num_errors)
+        return 1
+    else:
+        print 'No mistakes found.'
+        return 0
