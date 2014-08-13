@@ -20,5 +20,5 @@ Usage
 The supplied files contains several example LaTeX files that can be used to test it.
 
 ```bash
-$ draftcheck examples/article.tex
+$ draftcheck examples/simple.tex
 ```
