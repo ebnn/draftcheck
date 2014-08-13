@@ -4,7 +4,8 @@ setup_args = {
     'name': 'draftcheck',
     'version': '0.1',
     'description': 'LaTeX Lint for Academic Writing',
-    'packages': ['draftcheck']
+    'packages': ['draftcheck'],
+    'zip_safe': True,
 }
 
 try:
