@@ -513,6 +513,12 @@ def check_bare_urls(text, matches):
     return [m.span() for m in matches]
 
 
+@rule(r'\.  [A-Z]')
+def check_double_space(text, matches):
+    """Prefer single space over double space after a period."""
+    return [m.span() for m in matches]
+
+
 @rule_generator()
 def check_incorrect_abbreviations():
     """Punctuate abbreviations correctly. Should be "{0}"."""
