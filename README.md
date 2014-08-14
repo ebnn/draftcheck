@@ -6,7 +6,13 @@ draftcheck
 Installation
 ------------
 
-`draftcheck` can be manually installed from source:
+`draftcheck` can be installed using pip:
+
+```bash
+pip install draftcheck
+```
+
+You can also install it from source:
 
 ```bash
 mkdir draftcheck && cd draftcheck
