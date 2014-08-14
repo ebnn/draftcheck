@@ -29,11 +29,18 @@ examples/simple.tex:31:37: ...thin \LaTeX\cite{lamport94}...
                                         ^^^^^^^
 	[004] Place a single, non-breaking space '~' before citations.
 
-examples/simple.tex:49:19: ...n 'itemize' environmen...
-                                        ^^
-	[014] Left quotes must be balanced by a matching right quote.
+examples/simple.tex:49:10: ...%Set up an 'itemize' environmen...
+                                        ^^^^^^^^^^^
+	[014] Use left and right quotation marks ` and ' rather than '.
 
 examples/simple.tex:93:0: \begin{center}
                           ^^^^^^^^^^^^^^
 	[015] Use \centering instead of \begin{center}.
+
+examples/simple.tex:123:29: ...the number '9'. This is b...
+                                         ^^^^^
+	[014] Use left and right quotation marks ` and ' rather than '.
+
+
+Total of 5 mistakes found.
 ```
