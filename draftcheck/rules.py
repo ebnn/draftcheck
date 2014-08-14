@@ -282,39 +282,19 @@ def check_double_quote(text, matches):
     return [m.span() for m in matches]
 
 
-@rule(r"(?: |^)(``|`)|(''|')(?: |$)")
-def check_unmatched_quotes(text, matches):
-    """Left quotes must be balanced by a matching right quote.
+@rule(r'\s\'.+?\'[\s\.,]')
+def check_single_quote(text, matches):
+    """Use left and right quotation marks ` and ' rather than '.
 
     Example
     -------
     Bad:
-        ``Very much indeed,' Alice said politely.
-
-    Bad:
-        ``Very much indeed, Alice said politely.
+        It is 'too good to be true'.
 
     Good:
-        ``Very much indeed,'' Alice said politely.
+        It is `too good to be true'.
     """
-    unmatched = []
-    for m in matches:
-        if m.group(1) is not None:
-            # Opening quote
-            unmatched.append(m)
-        else:
-            if len(unmatched) == 0:
-                yield m.span()
-            else:
-                if unmatched[-1].group(1) == '`' and m.group(2) == "''":
-                    yield unmatched[-1].span()
-                elif unmatched[-1].group(1) == '``' and m.group(2) == "'":
-                    yield unmatched[-1].span()
-
-                unmatched.pop()
-
-    for m in unmatched:
-        yield m.span()
+    return [m.span() for m in matches]
 
 
 @rule(r'\\begin{center}', in_env='any')
